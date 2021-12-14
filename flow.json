@@ -1,0 +1,130 @@
+{
+	"emulators": {
+		"default": {
+			"port": 3569,
+			"serviceAccount": "emulator-account"
+		}
+	},
+	"contracts": {
+		"CaaArts": "./contracts/CaaArts.cdc",
+		"CaaPass": "./contracts/CaaPass.cdc",
+		"NFTMetadata": "./contracts/NFTMetadata.cdc",
+		"NonFungibleToken": {
+			"source": "./contracts/NonFungibleToken.cdc",
+			"aliases": {
+				"testnet": "0x631e88ae7f1d7c20",
+				"mainnet": "0x1d7e57aa55817448"
+			}
+		}
+	},
+	"networks": {
+		"emulator": {
+			"host": "127.0.0.1:3569",
+			"chain": "flow-emulator"
+		},
+		"testnet": {
+			"host": "access.devnet.nodes.onflow.org:9000",
+			"chain": "flow-testnet"
+		},
+		"mainnet": {
+			"host": "access.mainnet.nodes.onflow.org:9000",
+			"chain": "flow-mainnet"
+		}
+	},
+	"accounts": {
+		"emulator-account": {
+			"address": "f8d6e0586b0a20c7",
+			"keys": "41580f910db3779bcbd82739b3eb5a642ceb50a37b188bbfc6befae4e8cb5556"
+		},
+		"admin-testnet": {
+			"address": "a8b1239250f8d342",
+			"keys": [
+				{
+					"type": "hex",
+					"index": 0,
+					"signatureAlgorithm": "ECDSA_secp256k1",
+					"hashAlgorithm": "SHA3_256",
+					"context": {
+						"privateKey": "74911f91945d6b6648f02cbafcd353e857f1d2967ba9c252e2dc761d24f0f403"
+					}
+				}
+			],
+			"chain": "flow-testnet"
+		},
+		"user-testnet": {
+			"address": "bee546a1c9fcd923",
+			"keys": [
+				{
+					"type": "hex",
+					"index": 0,
+					"signatureAlgorithm": "ECDSA_secp256k1",
+					"hashAlgorithm": "SHA3_256",
+					"context": {
+						"privateKey": "b7c15c43f9c3f394809cc2c5c5be7aef5bd17dbbdb60be41ca89c57e6bb45fab"
+					}
+				}
+			],
+			"chain": "flow-testnet"
+		},
+		"admin-mainnet": {
+			"address": "98c9c2e548b84d31",
+			"keys": [
+				{
+					"type": "google-kms",
+					"index": 0,
+					"signatureAlgorithm": "ECDSA_secp256k1",
+					"hashAlgorithm": "SHA2_256",
+					"context": {
+						"resourceName": "projects/portto-prod/locations/global/keyRings/flow-keys/cryptoKeys/portto-operation/cryptoKeyVersions/1"
+					},
+					"resourceID": "projects/portto-prod/locations/global/keyRings/flow-keys/cryptoKeys/portto-operation/cryptoKeyVersions/1"
+				}
+			],
+			"chain": "flow-mainnet"
+		},
+		"admin-mainnet-1": {
+			"fromFile": "./flow.mainnet.json"
+		},
+		"admin-mainnet-2": {
+			"fromFile": "./flow.mainnet.json"
+		},
+		"admin-mainnet-3": {
+			"fromFile": "./flow.mainnet.json"
+		},
+		"admin-mainnet-4": {
+			"fromFile": "./flow.mainnet.json"
+		},
+		"admin-mainnet-5": {
+			"fromFile": "./flow.mainnet.json"
+		},
+		"admin-mainnet-6": {
+			"fromFile": "./flow.mainnet.json"
+		},
+		"admin-mainnet-7": {
+			"fromFile": "./flow.mainnet.json"
+		},
+		"admin-mainnet-8": {
+			"fromFile": "./flow.mainnet.json"
+		},
+		"admin-mainnet-9": {
+			"fromFile": "./flow.mainnet.json"
+		},
+		"admin-mainnet-10": {
+			"fromFile": "./flow.mainnet.json"
+		}
+	},
+	"deployments": {
+		"testnet": {
+			"admin-testnet": [
+				"CaaArts",
+				"CaaPass"
+			]
+		},
+		"mainnet": {
+			"admin-mainnet": [
+				"CaaArts",
+				"CaaPass"
+			]
+		}
+	}
+}
