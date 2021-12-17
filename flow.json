@@ -6,16 +6,16 @@
 		}
 	},
 	"contracts": {
-		"CaaArts": "./contracts/CaaArts.cdc",
-		"CaaPass": "./contracts/CaaPass.cdc",
-		"NFTMetadata": "./contracts/NFTMetadata.cdc",
 		"NonFungibleToken": {
 			"source": "./contracts/NonFungibleToken.cdc",
 			"aliases": {
 				"testnet": "0x631e88ae7f1d7c20",
 				"mainnet": "0x1d7e57aa55817448"
 			}
-		}
+		},
+		"CaaArts": "./contracts/CaaArts.cdc",
+		"CaaPass": "./contracts/CaaPass.cdc",
+		"SwapTrader": "./contracts/SwapTrader.cdc"
 	},
 	"networks": {
 		"emulator": {
@@ -117,13 +117,15 @@
 		"testnet": {
 			"admin-testnet": [
 				"CaaArts",
-				"CaaPass"
+				"CaaPass",
+				"SwapTrader"
 			]
 		},
 		"mainnet": {
 			"admin-mainnet": [
 				"CaaArts",
-				"CaaPass"
+				"CaaPass",
+				"SwapTrader"
 			]
 		}
 	}
