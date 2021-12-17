@@ -1,28 +1,29 @@
 # Token
-### Get Metadata from CaaArts
-```
-flow scripts execute ./scripts/getCaaArtMetadata.cdc \
-  --network testnet \
-  --arg Address:0x56ac261eb0f67cf4
+
+## Get Metadata from CaaArts
+
+```sh
+flow scripts execute ./scripts/getCaaArtMetadata.cdc 0x56ac261eb0f67cf4 \
+  --network testnet
 ```
 
-### Get All Metadata from CaaArts
-```
-flow scripts execute ./scripts/getAllCaaArtsMetadata.cdc \
-  --network mainnet \
-  --arg Address:0xdd718b0856a69974
+## Get All Metadata from CaaArts
+
+```sh
+flow scripts execute ./scripts/getAllCaaArtsMetadata.cdc 0xdd718b0856a69974 \
+  --network mainnet
 ```
 
-### Get All Metadata from CaaPass
-```
-flow scripts execute ./scripts/getAllCaaPassMetadata.cdc \
-  --network mainnet \
-  --arg Address:0xdd718b0856a69974
+## Get All Metadata from CaaPass
+
+```sh
+flow scripts execute ./scripts/getAllCaaPassMetadata.cdc 0xdd718b0856a69974 \
+  --network mainnet
 ```
 
-### Get Metadata for a typeID from CaaPass
-```
-flow scripts execute ./scripts/getCaaPassTypeMetadata.cdc \
-  --network mainnet \
-  --arg UInt64:0
+## Get Metadata for a typeID from CaaPass
+
+```sh
+flow scripts execute ./scripts/getCaaPassTypeMetadata.cdc 0 \
+  --network mainnet
 ```
