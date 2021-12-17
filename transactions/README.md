@@ -1,22 +1,26 @@
 # Token
-### Setup CaaArts Collection
-```
+
+## Setup CaaArts Collection
+
+```sh
 flow transactions send ./transactions/setupCaaArtsCollection.cdc \
   --network testnet \
   --signer user-testnet \
   --gas-limit 1000
 ```
 
-### Setup CaaPass Collection
-```
+## Setup CaaPass Collection
+
+```sh
 flow transactions send ./transactions/setupCaaPassCollection.cdc \
   --network testnet \
   --signer user-testnet \
   --gas-limit 1000
 ```
 
-### Register Metadata
-```
+## Register Metadata
+
+```sh
 flow transactions send ./transactions/registerMetadata.cdc \
   --network mainnet \
   --args-json "$(cat "./metadata.json")" \
@@ -24,8 +28,9 @@ flow transactions send ./transactions/registerMetadata.cdc \
   --gas-limit 1000
 ```
 
-### Mint CaaArts NFT
-```
+## Mint CaaArts NFT
+
+```sh
 flow transactions send ./transactions/mintCaaArts.cdc \
   --network testnet \
   --arg Address:0x56ac261eb0f67cf4 \
@@ -33,8 +38,9 @@ flow transactions send ./transactions/mintCaaArts.cdc \
   --gas-limit 1000
 ```
 
-### Mint CaaArts NFT in Batch
-```
+## Mint CaaArts NFT in Batch
+
+```sh
 flow transactions send ./transactions/mintCaaArtsBatch.cdc \
   --network mainnet \
   --args-json "$(cat "./arguments/batch.json")" \
@@ -42,8 +48,9 @@ flow transactions send ./transactions/mintCaaArtsBatch.cdc \
   --gas-limit 1000
 ```
 
-### Mint CaaPass NFT in Batch
-```
+## Mint CaaPass NFT in Batch
+
+```sh
 flow transactions send ./transactions/mintCaaPassBatch.cdc \
   --network mainnet \
   --arg Address:0x98c9c2e548b84d31 \
@@ -53,16 +60,18 @@ flow transactions send ./transactions/mintCaaPassBatch.cdc \
   --gas-limit 9999
 ```
 
-### Transfer CaaPass in Batch
-```
+## Transfer CaaPass in Batch
+
+```sh
 flow transactions send ./transactions/transferCaaPassBatch.cdc 0x5f14b7e68e0bc3c3 4110 90 \
   --network mainnet \
   --signer admin-mainnet-1 \
   --gas-limit 1000
 ```
 
-### Add New Keys
-```
+## Add New Keys
+
+```sh
 flow transactions send ./transactions/addPublicKey.cdc \
   --network mainnet \
   --arg String:9e61eaca1d6e91064845d73bc6fb92aa0475aa346984f98e37c8fd36ee01c7c173ec3f871138cdc3ed2e8768ad7b12342597da1c47657e61d37980591c0ce979 \
