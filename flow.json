@@ -82,34 +82,7 @@
 			],
 			"chain": "flow-mainnet"
 		},
-		"admin-mainnet-1": {
-			"fromFile": "./flow.mainnet.json"
-		},
-		"admin-mainnet-2": {
-			"fromFile": "./flow.mainnet.json"
-		},
-		"admin-mainnet-3": {
-			"fromFile": "./flow.mainnet.json"
-		},
-		"admin-mainnet-4": {
-			"fromFile": "./flow.mainnet.json"
-		},
-		"admin-mainnet-5": {
-			"fromFile": "./flow.mainnet.json"
-		},
-		"admin-mainnet-6": {
-			"fromFile": "./flow.mainnet.json"
-		},
-		"admin-mainnet-7": {
-			"fromFile": "./flow.mainnet.json"
-		},
-		"admin-mainnet-8": {
-			"fromFile": "./flow.mainnet.json"
-		},
-		"admin-mainnet-9": {
-			"fromFile": "./flow.mainnet.json"
-		},
-		"admin-mainnet-10": {
+		"admin-mainnet-local": {
 			"fromFile": "./flow.mainnet.json"
 		}
 	},
