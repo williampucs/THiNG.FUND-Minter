@@ -10,20 +10,62 @@ pub contract SwapTrader {
 
   // Named Paths
   //
-  pub let AdminStoragePath: StoragePath
-
-  // pre-defined swap pairs
-  // 
-  access(contract) var registeredPairs: {UInt64: SwapPair}
+  pub let TraderListStoragePath: StoragePath
+  pub let TraderListPublicPath: PublicPath
 
   // Type Definitions
   // 
+  // SwapAttribute
+  // Detailed swap-pair attribute
+  pub struct SwapAttribute {
+    // resourceType - which type of NFT resource is required
+    pub let resourceType: Type
+    // minId - minimium id of the NFT
+    pub let minId: UInt64
+    // maxId - maximium id of the NFT
+    pub let maxId: UInt64
+    // amount - required amount of this type NFT
+    pub let amount: UInt64
+
+    init(
+      resourceType: Type,
+      minId: UInt64,
+      maxId: UInt64,
+      amount: UInt64
+    ) {
+      self.resourceType = resourceType
+      self.minId = minId
+      self.maxId = maxId
+      self.amount = amount
+    }
+  }
+
+  // SwapPair - Registering defination
   pub struct SwapPair {
+    // capabilities
+    // targetCollection - check for target existance
+    pub let targetCollection: Capability<&{NonFungibleToken.CollectionPublic}>
+    // targetProvider - withdraw from target capability
+    pub let targetProvider: Capability<&{NonFungibleToken.Provider}>
+    // sourceAttributes - required source attributes
+    pub let sourceAttributes: [SwapAttribute]
+    // targetAttributes - swap target attributes
+    pub let targetAttributes: [SwapAttribute]
 
     // paused: is swappair working currently
     access(contract) var paused: Bool
 
-    init(paused: Bool) {
+    init(
+      tarColl: Capability<&{NonFungibleToken.CollectionPublic}>,
+      tarProv: Capability<&{NonFungibleToken.Provider}>,
+      srcAttrs: [SwapAttribute],
+      tarAttrs: [SwapAttribute],
+      paused: Bool
+    ) {
+      self.sourceAttributes = srcAttrs
+      self.targetAttributes = tarAttrs
+      self.targetCollection = tarColl
+      self.targetProvider = tarProv
       self.paused = paused
     }
 
@@ -34,20 +76,43 @@ pub contract SwapTrader {
     }
   }
 
+  // TraderList
+  // Interface for listing swap pair and handle swaping action
+  pub resource interface TraderListPublic {
+    // isTradable
+    // 1. Does the swap-pair pause?
+    // 2. Has enough target to swap?
+    pub fun isTradable (typeID: UInt64): Bool;
+    // swapNFT - execute swap
+    pub fun swapNFT (
+      typeID: UInt64,
+      sourceIDs: [UInt64],
+      sourceProvider: Capability<&{NonFungibleToken.Provider}>,
+      targetReceiver: Capability<&{NonFungibleToken.Receiver}>
+    );
+  }
 
-  // Admin
-  // Resource that an admin or something similar would own to be
+  // TraderList
+  // Resource that an trader list or something similar would own to be
   // able to define new SwapPairs
   //
-  pub resource Admin {
+  pub resource TraderList {
+    // pre-registered swap pairs
+    // 
+    access(contract) var registeredPairs: {UInt64: SwapPair}
+
+    // init
+    init() {
+      self.registeredPairs = {}
+    }
+
     // registerSwapPair
     // Registers SwapPair for a typeID
-    //
     pub fun registerSwapPair(index: UInt64, pair: SwapPair) {
       pre {
-        SwapTrader.registeredPairs[index] != nil: "Cannot register: The index is occupied"
+        self.registeredPairs[index] != nil: "Cannot register: The index is occupied"
       }
-      SwapTrader.registeredPairs[index] = pair
+      self.registeredPairs[index] = pair
 
       // emit Event
       emit SwapPairRegistered(pairID: index)
@@ -57,12 +122,12 @@ pub contract SwapTrader {
     // Set state of the swap pair 
     pub fun setSwapPairState(index: UInt64, paused: Bool) {
       pre {
-        SwapTrader.registeredPairs[index] == nil:
+        self.registeredPairs[index] == nil:
           "Cannot set state: The swap-pair of index does not exist."
-        SwapTrader.registeredPairs[index]!.paused == paused:
+        self.registeredPairs[index]!.paused == paused:
           "Cannot set state: The swap-pair of index has same state."
       }
-      SwapTrader.registeredPairs[index]?.setState(paused)
+      self.registeredPairs[index]?.setState(paused)
 
       // emit Event
       emit SwapPairStateChanged(pairID: index, paused: paused)
@@ -73,14 +138,12 @@ pub contract SwapTrader {
   //
   init() {
     // Set our named paths
-    self.AdminStoragePath = /storage/swapTraderAdmin
+    self.TraderListStoragePath = /storage/swapTraderAdmin
+    self.TraderListPublicPath = /public/swapTraderList
 
-    // Initialize predefined swap pairs
-    self.registeredPairs = {}
-
-    // Create a Admin resource and save it to storage
-    let admin <- create Admin()
-    self.account.save(<-admin, to: self.AdminStoragePath)
+    // Create a trader list resource and save it to storage
+    let list <- create TraderList()
+    self.account.save(<-list, to: self.TraderListStoragePath)
 
     emit ContractInitialized()
   }
