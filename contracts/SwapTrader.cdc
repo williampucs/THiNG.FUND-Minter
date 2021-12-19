@@ -43,6 +43,8 @@ pub contract SwapTrader {
   // SwapPair - Registering defination
   pub struct SwapPair {
     // capabilities
+    // sourceReceiver - capability for depositing source NFTs
+    pub let sourceReceiver: Capability<&{NonFungibleToken.Receiver}>
     // targetCollection - check for target existance
     pub let targetCollection: Capability<&{NonFungibleToken.CollectionPublic}>
     // targetProvider - withdraw from target capability
@@ -56,6 +58,7 @@ pub contract SwapTrader {
     access(contract) var paused: Bool
 
     init(
+      sourceReceiver: Capability<&{NonFungibleToken.Receiver}>,
       targetCollection: Capability<&{NonFungibleToken.CollectionPublic}>,
       targetProvider: Capability<&{NonFungibleToken.Provider}>,
       sourceAttrs: [SwapAttribute],
@@ -81,6 +84,7 @@ pub contract SwapTrader {
       // initialize struct data
       self.sourceAttributes = sourceAttrs
       self.targetAttributes = targetAttrs
+      self.sourceReceiver = sourceReceiver
       self.targetCollection = targetCollection
       self.targetProvider = targetProvider
       self.paused = paused
@@ -198,9 +202,56 @@ pub contract SwapTrader {
       targetReceiver: Capability<&{NonFungibleToken.Receiver}>
     ) {
       pre {
+        // check if currently tradable
         self.isTradable(pairID): "The swap pair is not tradable."
       }
-      // TODO
+
+      // Step.1 withdraw all source NFTs, and prepare swap pair
+      let swapPair = self.registeredPairs[pairID]!
+
+      let sourceRefNFTs: {UInt64: &NonFungibleToken.NFT} = {}
+      let sourceNFTs: @[NonFungibleToken.NFT] <- []
+      for id in sourceIDs {
+        let source = sourceProvider.borrow() ?? panic("Failed to borrow source provider")
+        let nft <- source.withdraw(withdrawID: id)
+        // add to dictionary
+        let nftRef = &nft as &NonFungibleToken.NFT
+        sourceRefNFTs[nftRef.uuid] = nftRef
+        // append to array
+        sourceNFTs.append(<- nft)
+      }
+
+      // Step.2 Check if all NFT matched
+      // check in required source attributes
+      for srcOneAttr in swapPair.sourceAttributes {
+        // to find matched NFT
+        var matchedAmount: UInt64 = 0
+        for key in sourceRefNFTs.keys {
+          let nftRef = sourceRefNFTs[key]!
+          if matchedAmount < srcOneAttr.amount &&
+            nftRef.isInstance(srcOneAttr.resourceType) &&
+            nftRef.id >= srcOneAttr.minId &&
+            nftRef.id < srcOneAttr.maxId {
+            // record on matched
+            matchedAmount = matchedAmount + 1
+            // remove from refs
+            sourceRefNFTs.remove(key: nftRef.uuid)
+          } else if matchedAmount >= srcOneAttr.amount {
+            break
+          }
+        }
+        // check if all matched
+        if matchedAmount < srcOneAttr.amount {
+          panic("Failed to check swap pair source NFTs")
+        }
+      }
+
+      // Step.3 Pick target NFT from SwapPair capability
+
+      // Step.4 Deposit source NFTs to SwapPair source Receiver
+
+      // Step.5 Deposit target NFTs to target Receiver
+
     }
   }
 
