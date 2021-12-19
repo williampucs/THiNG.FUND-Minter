@@ -71,16 +71,14 @@ pub contract SwapTrader {
       }
       let collection = targetCollection.borrow() ?? panic("Failed to borrow collection")
       let ids = collection.getIDs()
-      if ids.length > 0 {
-        let firstNFT = collection.borrowNFT(id: ids[0])
-        for one in targetAttrs {
-          if !firstNFT.isInstance(one.resourceType) {
-            panic("Target resource type mis-match")
-          }
-        } // end for
-      } else {
-        panic("Empty target collection.")
-      }
+      // check collection length
+      assert(ids.length > 0, message: "Empty target collection.")
+      // check resource type
+      let firstNFT = collection.borrowNFT(id: ids[0])
+      for one in targetAttrs {
+        assert(firstNFT.isInstance(one.resourceType), message: "Target resource type mis-match")
+      } // end for
+
       // initialize struct data
       self.sourceAttributes = sourceAttrs
       self.targetAttributes = targetAttrs
@@ -171,8 +169,7 @@ pub contract SwapTrader {
         // exist ids
         let existIDs = collection.getIDs()
         // required attributes
-        let requiredAttributes = swapPair.targetAttributes
-        for attr in requiredAttributes {
+        for attr in swapPair.targetAttributes {
           var matched: UInt64 = 0
           // check all existIDs
           for currentID in existIDs {
@@ -188,7 +185,7 @@ pub contract SwapTrader {
           if matched < attr.amount {
             return false
           }
-        } // end for requiredAttributes
+        } // end for swapPair.targetAttributes
         return true
       } else {
         return false
@@ -204,11 +201,14 @@ pub contract SwapTrader {
       pre {
         // check if currently tradable
         self.isTradable(pairID): "The swap pair is not tradable."
+        sourceProvider.address == targetReceiver.address: "The address of sourceProvider and targetReceiver should be same."
       }
 
       // Step.1 withdraw all source NFTs, and prepare swap pair
+      // 
+      // swap pair
       let swapPair = self.registeredPairs[pairID]!
-
+      // source NFTs
       let sourceRefNFTs: {UInt64: &NonFungibleToken.NFT} = {}
       let sourceNFTs: @[NonFungibleToken.NFT] <- []
       for id in sourceIDs {
@@ -222,6 +222,7 @@ pub contract SwapTrader {
       }
 
       // Step.2 Check if all NFT matched
+      // 
       // check in required source attributes
       for srcOneAttr in swapPair.sourceAttributes {
         // to find matched NFT
@@ -241,17 +242,65 @@ pub contract SwapTrader {
           }
         }
         // check if all matched
-        if matchedAmount < srcOneAttr.amount {
-          panic("Failed to check swap pair source NFTs")
-        }
+        assert(matchedAmount >= srcOneAttr.amount, message: "produced NFTs not match swap pair source NFTs")
       }
 
       // Step.3 Pick target NFT from SwapPair capability
+      // 
+      let targetCollection = swapPair.targetCollection.borrow() ?? panic("Failed to borrow target collection")
+      let targetNFTs: @[NonFungibleToken.NFT] <- []
+
+      // get exist ids
+      let existIDs = targetCollection.getIDs()
+      let pickedIDs: [UInt64] = []
+      // required attributes
+      for attr in swapPair.targetAttributes {
+        var matched: UInt64 = 0
+        // check all existIDs
+        for currentID in existIDs {
+          if currentID >= attr.minId && currentID < attr.maxId {
+            matched = matched + 1
+            pickedIDs.append(currentID)
+            // when matched id reach the attr amount, end check
+            if matched >= attr.amount {
+              break
+            }
+          }
+        }
+        // ensuore 
+        assert(matched >= attr.amount, message: "target NFTs is not enough.")
+      } // end for swapPair.targetAttributes
+      // ensure picked IDs exists
+      assert(pickedIDs.length > 0, message: "No picked IDs found.")
+      // withdraw all target NFTs
+      for id in pickedIDs {
+        let target = swapPair.targetProvider.borrow() ?? panic("Failed to borrow target provider in SwapPair")
+        targetNFTs.append(<- target.withdraw(withdrawID: id))
+      }
 
       // Step.4 Deposit source NFTs to SwapPair source Receiver
+      // 
+      let sourceReceiverRef = swapPair.sourceReceiver.borrow() ?? panic("Failed to borrow source receiver.")
+      while sourceNFTs.length > 0 {
+        sourceReceiverRef.deposit(token: <- sourceNFTs.removeFirst())
+      }
+      destroy  sourceNFTs
 
       // Step.5 Deposit target NFTs to target Receiver
+      // 
+      let targetReceiverRef = targetReceiver.borrow() ?? panic("Failed to borrow target receiver.")
+      while targetNFTs.length > 0 {
+        targetReceiverRef.deposit(token: <- targetNFTs.removeFirst())
+      }
+      destroy  targetNFTs
 
+      // emit Swap Event
+      emit SwapNFT(
+        pairID: pairID,
+        swapper: targetReceiver.address,
+        sourceIDs: sourceIDs,
+        targetIDs: pickedIDs
+      )
     }
   }
 
