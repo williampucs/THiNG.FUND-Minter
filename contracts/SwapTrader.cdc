@@ -40,8 +40,40 @@ pub contract SwapTrader {
     }
   }
 
+  // SwapPairAttributes
+  pub struct interface SwapPairAttributes {
+    // sourceAttributes - required source attributes
+    pub let sourceAttributes: [SwapAttribute]
+    // targetAttributes - swap target attributes
+    pub let targetAttributes: [SwapAttribute]
+    // isPaused - if swap-pair paused
+    pub fun isPaused(): Bool
+  }
+
+  // SwapPairInfo
+  pub struct SwapPairInfo: SwapPairAttributes {
+    pub let sourceAttributes: [SwapAttribute]
+    pub let targetAttributes: [SwapAttribute]
+    access(self) let paused: Bool
+
+    init(
+      sourceAttrs: [SwapAttribute],
+      targetAttrs: [SwapAttribute],
+      paused: Bool
+    ) {
+      // initialize struct data
+      self.sourceAttributes = sourceAttrs
+      self.targetAttributes = targetAttrs
+      self.paused = paused
+    }
+
+    pub fun isPaused(): Bool {
+      return self.paused
+    }
+  }
+
   // SwapPair - Registering defination
-  pub struct SwapPair {
+  pub struct SwapPair: SwapPairAttributes {
     // capabilities
     // sourceReceiver - capability for depositing source NFTs
     pub let sourceReceiver: Capability<&{NonFungibleToken.Receiver}>
@@ -88,6 +120,12 @@ pub contract SwapTrader {
       self.paused = paused
     }
 
+    // isPaused
+    // if the swap pair is paused
+    pub fun isPaused(): Bool {
+      return self.paused
+    }
+
     // setState
     // Set state of the swap pair
     access(contract) fun setState(_ paused: Bool) {
@@ -99,6 +137,10 @@ pub contract SwapTrader {
   // Interface for listing swap pair and handle swaping action
   //
   pub resource interface SwapPairListPublic {
+    // getSwapPair
+    // get swap pair info
+    pub fun getSwapPair (_ pairID: UInt64): AnyStruct{SwapTrader.SwapPairAttributes}?;
+
     // isTradable
     // 1. Does the swap-pair pause?
     // 2. Has enough target to swap?
@@ -159,6 +201,20 @@ pub contract SwapTrader {
     }
 
     // ------ Interface implement ------
+    // getSwapPair
+    // get swap pair info
+    pub fun getSwapPair (_ pairID: UInt64): AnyStruct{SwapTrader.SwapPairAttributes}? {
+      if let swapPair = self.registeredPairs[pairID] {
+        return SwapTrader.SwapPairInfo(
+          sourceAttrs: swapPair.sourceAttributes,
+          targetAttrs: swapPair.targetAttributes,
+          paused: swapPair.paused
+        )
+      } else {
+        return nil
+      }
+    }
+
     // isTradable
     // 1. Does the swap-pair pause?
     // 2. Has enough target to swap?
