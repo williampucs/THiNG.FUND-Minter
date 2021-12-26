@@ -66,8 +66,8 @@ pub contract SwapTrader {
       paused: Bool
     ) {
       pre {
-        sourceAttrs.length > 0: "Length should be greator then 0: source swap attributes"
-        targetAttrs.length > 0: "Length should be greator then 0: target swap attributes"
+        sourceAttrs.length > 0: "Length should be greator than 0: source swap attributes"
+        targetAttrs.length > 0: "Length should be greator than 0: target swap attributes"
       }
       let collection = targetCollection.borrow() ?? panic("Failed to borrow collection")
       let ids = collection.getIDs()
@@ -103,6 +103,10 @@ pub contract SwapTrader {
     // 1. Does the swap-pair pause?
     // 2. Has enough target to swap?
     pub fun isTradable (_ pairID: UInt64): Bool;
+
+    // getTradableAmount
+    // How many trable amount remaining
+    pub fun getTradableAmount (_ pairID: UInt64): UInt64;
 
     // swapNFT - execute swap
     pub fun swapNFT (
@@ -191,6 +195,40 @@ pub contract SwapTrader {
         return false
       }
     }
+
+    // getTradableAmount
+    // How many trable amount remaining
+    pub fun getTradableAmount (_ pairID: UInt64): UInt64 {
+      if let swapPair = self.registeredPairs[pairID] {
+        // check pause state
+        if swapPair.paused {
+          return 0
+        }
+        // check target
+        let collection = swapPair.targetCollection.borrow() ?? panic("Failed to borrow target collection")
+        // exist ids
+        let existIDs = collection.getIDs()
+
+        // variable for calculate
+        var maxTradableAmount: UInt64 = 0
+        // required attributes
+        for attr in swapPair.targetAttributes {
+          var matched: UInt64 = 0
+          // check all existIDs
+          for currentID in existIDs {
+            if currentID >= attr.minId && currentID < attr.maxId {
+              matched = matched + 1
+            }
+          }
+          let pairs: UInt64 = matched / attr.amount
+          maxTradableAmount = maxTradableAmount < pairs ? maxTradableAmount : pairs
+        }
+        return maxTradableAmount
+      } else {
+        return 0
+      }
+    }
+
     // swapNFT - execute swap
     pub fun swapNFT (
       pairID: UInt64,
