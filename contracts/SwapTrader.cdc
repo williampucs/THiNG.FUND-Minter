@@ -76,7 +76,7 @@ pub contract SwapTrader {
   pub struct SwapPair: SwapPairAttributes {
     // capabilities
     // sourceReceiver - capability for depositing source NFTs
-    pub let sourceReceiver: Capability<&{NonFungibleToken.Receiver}>
+    pub let sourceReceiver: Capability<&{NonFungibleToken.CollectionPublic}>
     // targetCollection - check for target existance
     pub let targetCollection: Capability<&{NonFungibleToken.CollectionPublic}>
     // targetProvider - withdraw from target capability
@@ -90,7 +90,7 @@ pub contract SwapTrader {
     access(contract) var paused: Bool
 
     init(
-      sourceReceiver: Capability<&{NonFungibleToken.Receiver}>,
+      sourceReceiver: Capability<&{NonFungibleToken.CollectionPublic}>,
       targetCollection: Capability<&{NonFungibleToken.CollectionPublic}>,
       targetProvider: Capability<&{NonFungibleToken.Provider}>,
       sourceAttrs: [SwapAttribute],
@@ -155,7 +155,7 @@ pub contract SwapTrader {
       pairID: UInt64,
       sourceIDs: [UInt64],
       sourceProvider: Capability<&{NonFungibleToken.Provider}>,
-      targetReceiver: Capability<&{NonFungibleToken.Receiver}>
+      targetReceiver: Capability<&{NonFungibleToken.CollectionPublic}>
     );
   }
 
@@ -290,7 +290,7 @@ pub contract SwapTrader {
       pairID: UInt64,
       sourceIDs: [UInt64],
       sourceProvider: Capability<&{NonFungibleToken.Provider}>,
-      targetReceiver: Capability<&{NonFungibleToken.Receiver}>
+      targetReceiver: Capability<&{NonFungibleToken.CollectionPublic}>
     ) {
       pre {
         // check if currently tradable

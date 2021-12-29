@@ -5,7 +5,7 @@ import CaaPass from "../contracts/CaaPass.cdc"
 transaction(address: Address, pairID: UInt64, sourceIDs: [UInt64]) {
   let swapTraderList: &{SwapTrader.SwapPairListPublic}
   let sourceProvider: Capability<&{NonFungibleToken.Provider}>
-  let targetReceiver: Capability<&{NonFungibleToken.Receiver}>
+  let targetReceiver: Capability<&{NonFungibleToken.CollectionPublic}>
 
   prepare(signer: AuthAccount) {
     self.swapTraderList = getAccount(address).getCapability(SwapTrader.SwapPairListPublicPath)
@@ -22,7 +22,7 @@ transaction(address: Address, pairID: UInt64, sourceIDs: [UInt64]) {
     }
 
     // public capability
-    self.targetReceiver = signer.getCapability<&{NonFungibleToken.Receiver}>(CaaPass.CollectionPublicPath)
+    self.targetReceiver = signer.getCapability<&{NonFungibleToken.CollectionPublic}>(CaaPass.CollectionPublicPath)
   }
   execute {
     self.swapTraderList.swapNFT(
