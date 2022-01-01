@@ -147,8 +147,12 @@ pub contract SwapTrader {
     pub fun isTradable (_ pairID: UInt64): Bool;
 
     // getTradableAmount
-    // How many trable amount remaining
+    // How many tradable amount remaining
     pub fun getTradableAmount (_ pairID: UInt64): UInt64;
+
+    // getSwappedAmmount
+    // How many swapped pairs traded
+    pub fun getSwappedAmmount (_ pairID: UInt64): UInt64;
 
     // swapNFT - execute swap
     pub fun swapNFT (
@@ -168,9 +172,13 @@ pub contract SwapTrader {
     // 
     access(contract) var registeredPairs: {UInt64: SwapPair}
 
+    // swap records
+    access(contract) var swappedRecords: {UInt64: UInt64}
+
     // init
     init() {
       self.registeredPairs = {}
+      self.swappedRecords = {}
     }
 
     // registerSwapPair
@@ -285,6 +293,12 @@ pub contract SwapTrader {
       }
     }
 
+    // getSwappedAmmount
+    // How many swapped pairs traded
+    pub fun getSwappedAmmount (_ pairID: UInt64): UInt64 {
+      return self.swappedRecords[pairID] ?? 0
+    }
+
     // swapNFT - execute swap
     pub fun swapNFT (
       pairID: UInt64,
@@ -387,6 +401,9 @@ pub contract SwapTrader {
         targetReceiverRef.deposit(token: <- targetNFTs.removeFirst())
       }
       destroy  targetNFTs
+
+      // Step.6 Add to swapped pairs
+      self.swappedRecords[pairID] = self.swappedRecords[pairID] ?? 0 + 1
 
       // emit Swap Event
       emit SwapNFT(
