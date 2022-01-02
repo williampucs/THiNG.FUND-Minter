@@ -42,7 +42,7 @@ transaction(pairID: UInt64, inputs: [[UInt64; 3]], outputs: [[UInt64; 3]]) {
     // setup inputs
     for one in inputs {
       sourceAttrs.append(SwapTrader.SwapAttribute(
-        resourceType: CaaPass.NFT.getType(),
+        resourceIdentifier: CaaPass.NFT.getType().identifier,
         minId: one[0],
         maxId: one[1],
         amount: one[2]
@@ -53,7 +53,7 @@ transaction(pairID: UInt64, inputs: [[UInt64; 3]], outputs: [[UInt64; 3]]) {
     // setup outputs
     for one in outputs {
       targetAttrs.append(SwapTrader.SwapAttribute(
-        resourceType: CaaPass.NFT.getType(),
+        resourceIdentifier: CaaPass.NFT.getType().identifier,
         minId: one[0],
         maxId: one[1],
         amount: one[2]

@@ -18,8 +18,8 @@ pub contract SwapTrader {
   // SwapAttribute
   // Detailed swap-pair attribute
   pub struct SwapAttribute {
-    // resourceType - which type of NFT resource is required
-    pub let resourceType: Type
+    // resourceIdentifier - which identifier of NFT resource is required
+    pub let resourceIdentifier: String
     // minId - minimium id of the NFT
     pub let minId: UInt64
     // maxId - maximium id of the NFT
@@ -28,12 +28,12 @@ pub contract SwapTrader {
     pub let amount: UInt64
 
     init(
-      resourceType: Type,
+      resourceIdentifier: String,
       minId: UInt64,
       maxId: UInt64,
       amount: UInt64
     ) {
-      self.resourceType = resourceType
+      self.resourceIdentifier = resourceIdentifier
       self.minId = minId
       self.maxId = maxId
       self.amount = amount
@@ -108,7 +108,8 @@ pub contract SwapTrader {
       // check resource type
       let firstNFT = collection.borrowNFT(id: ids[0])
       for one in targetAttrs {
-        assert(firstNFT.isInstance(one.resourceType), message: "Target resource type mis-match")
+        let nftId = firstNFT.getType().identifier
+        assert(nftId == one.resourceIdentifier, message: "Target resource type mis-match")
       } // end for
 
       // initialize struct data
@@ -338,7 +339,7 @@ pub contract SwapTrader {
         for key in sourceRefNFTs.keys {
           let nftRef = sourceRefNFTs[key]!
           if matchedAmount < srcOneAttr.amount &&
-            nftRef.isInstance(srcOneAttr.resourceType) &&
+            nftRef.getType().identifier == srcOneAttr.resourceIdentifier &&
             nftRef.id >= srcOneAttr.minId &&
             nftRef.id < srcOneAttr.maxId {
             // record on matched

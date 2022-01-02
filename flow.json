@@ -34,7 +34,8 @@
 	"accounts": {
 		"emulator-account": {
 			"address": "f8d6e0586b0a20c7",
-			"keys": "41580f910db3779bcbd82739b3eb5a642ceb50a37b188bbfc6befae4e8cb5556"
+			"keys": "41580f910db3779bcbd82739b3eb5a642ceb50a37b188bbfc6befae4e8cb5556",
+			"chain": "flow-emulator"
 		},
 		"admin-testnet": {
 			"address": "a8b1239250f8d342",
@@ -87,6 +88,14 @@
 		}
 	},
 	"deployments": {
+		"emulator": {
+			"emulator-account": [
+				"NonFungibleToken",
+				"CaaArts",
+				"CaaPass",
+				"SwapTrader"
+			]
+		},
 		"testnet": {
 			"admin-testnet": [
 				"CaaArts",
