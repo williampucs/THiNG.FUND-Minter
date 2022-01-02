@@ -109,7 +109,7 @@ pub contract SwapTrader {
       let firstNFT = collection.borrowNFT(id: ids[0])
       for one in targetAttrs {
         let nftId = firstNFT.getType().identifier
-        assert(nftId == one.resourceIdentifier, message: "Target resource type mis-match")
+        assert(nftId == one.resourceIdentifier, message: "Target resource type mis-match[".concat(nftId).concat(" - ").concat(one.resourceIdentifier).concat("]"))
       } // end for
 
       // initialize struct data
