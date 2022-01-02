@@ -275,7 +275,7 @@ pub contract SwapTrader {
         let existIDs = collection.getIDs()
 
         // variable for calculate
-        var maxTradableAmount: UInt64 = 0
+        var maxTradableAmount: UInt64 = UInt64.max
         // required attributes
         for attr in swapPair.targetAttributes {
           var matched: UInt64 = 0
