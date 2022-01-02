@@ -37,12 +37,17 @@ transaction(pairID: UInt64, inputs: [[UInt64; 3]], outputs: [[UInt64; 3]]) {
     }
   }
 
-  execute {
+  execute { 
+    // should be ((UInt64,UInt64):A.f8xxxxx7.CaaPass.NFT)
+    let casPassIdentifier = CaaPass.NFT.getType().identifier
+    // change to A.f8xxxxx7.CaaPass.NFT
+    let resourceIdentifier = casPassIdentifier.slice(from: 17, upTo: casPassIdentifier.length - 1)
+
     let sourceAttrs: [SwapTrader.SwapAttribute] = []
     // setup inputs
     for one in inputs {
       sourceAttrs.append(SwapTrader.SwapAttribute(
-        resourceIdentifier: CaaPass.NFT.getType().identifier,
+        resourceIdentifier: resourceIdentifier,
         minId: one[0],
         maxId: one[1],
         amount: one[2]
@@ -53,7 +58,7 @@ transaction(pairID: UInt64, inputs: [[UInt64; 3]], outputs: [[UInt64; 3]]) {
     // setup outputs
     for one in outputs {
       targetAttrs.append(SwapTrader.SwapAttribute(
-        resourceIdentifier: CaaPass.NFT.getType().identifier,
+        resourceIdentifier: resourceIdentifier,
         minId: one[0],
         maxId: one[1],
         amount: one[2]
