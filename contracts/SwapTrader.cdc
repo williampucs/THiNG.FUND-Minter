@@ -403,8 +403,8 @@ pub contract SwapTrader {
       }
       destroy  targetNFTs
 
-      // Step.6 Add to swapped pairs
-      self.swappedRecords[pairID] = self.swappedRecords[pairID] ?? 0 + 1
+      // Step.6 Add to swapped pairs amount
+      self.swappedRecords[pairID] = (self.swappedRecords[pairID] ?? 0) + 1
 
       // emit Swap Event
       emit SwapNFT(
