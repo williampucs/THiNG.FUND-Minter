@@ -2,7 +2,7 @@
 
 NFT for Chinese Academy of Art
 
-## How to use SwapTrader（测试网）
+## How to use SwapTrader（Testnet）
 
 ### Register SwapPair
 
