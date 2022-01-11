@@ -376,7 +376,7 @@ pub contract SwapTrader {
             }
           }
         }
-        // ensuore 
+        // ensure amount enough
         assert(matched >= attr.amount, message: "target NFTs is not enough.")
       } // end for swapPair.targetAttributes
       // ensure picked IDs exists
@@ -393,7 +393,7 @@ pub contract SwapTrader {
       while sourceNFTs.length > 0 {
         sourceReceiverRef.deposit(token: <- sourceNFTs.removeFirst())
       }
-      destroy  sourceNFTs
+      destroy sourceNFTs
 
       // Step.5 Deposit target NFTs to target Receiver
       // 
@@ -401,7 +401,7 @@ pub contract SwapTrader {
       while targetNFTs.length > 0 {
         targetReceiverRef.deposit(token: <- targetNFTs.removeFirst())
       }
-      destroy  targetNFTs
+      destroy targetNFTs
 
       // Step.6 Add to swapped pairs amount
       self.swappedRecords[pairID] = (self.swappedRecords[pairID] ?? 0) + 1
