@@ -12,6 +12,14 @@ flow transactions send ./transactions/swapTrader_registerSwapPair.cdc 0 "[[0,10,
   --signer admin-testnet
 ```
 
+```sh
+flow transactions send ./transactions/swapTrader_registerSwapPair.cdc 0 "[[0,5000,1],[5000,10000,1],[10000,15000,1],[15000,20000,1],[20000,25000,1],[25000,28000,1],[28000,31000,1],[31000,34000,1],[34000,37000,1]]" "[[37000,40000,1]]" \
+  --network mainnet \
+  --gas-limit 9999 \
+  --signer admin-mainnet-local \
+  -f flow.json -f flow.mainnet.json
+```
+
 Parameters:
 
 1. PairID
