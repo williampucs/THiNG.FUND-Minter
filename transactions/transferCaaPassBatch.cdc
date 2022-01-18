@@ -19,12 +19,15 @@ transaction(recipient: Address, withdrawStartingID: UInt64, count: Int) {
 
         var index = 0
         while index < count {
+            let currentId = withdrawStartingID + UInt64(index)
+            
+            if collectionRef.ownedNFTs[currentId] != nil {
+                // withdraw the NFT from the owner's collection
+                let nft <- collectionRef.withdraw(withdrawID: currentId)
 
-            // withdraw the NFT from the owner's collection
-            let nft <- collectionRef.withdraw(withdrawID: withdrawStartingID + UInt64(index))
-
-            // Deposit the NFT in the recipient's collection
-            depositRef.deposit(token: <-nft)
+                // Deposit the NFT in the recipient's collection
+                depositRef.deposit(token: <-nft)
+            }
 
             index = index + 1
         }
