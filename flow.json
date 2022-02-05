@@ -23,7 +23,8 @@
 		},
 		"CaaArts": "./contracts/CaaArts.cdc",
 		"CaaPass": "./contracts/CaaPass.cdc",
-		"SwapTrader": "./contracts/SwapTrader.cdc"
+		"SwapTrader": "./contracts/SwapTrader.cdc",
+		"ContributionPoint": "./contracts/ContributionPoint.cdc"
 	},
 	"networks": {
 		"emulator": "127.0.0.1:3569",
@@ -88,21 +89,24 @@
 				"NonFungibleToken",
 				"CaaArts",
 				"CaaPass",
-				"SwapTrader"
+				"SwapTrader",
+				"ContributionPoint"
 			]
 		},
 		"testnet": {
 			"admin-testnet": [
 				"CaaArts",
 				"CaaPass",
-				"SwapTrader"
+				"SwapTrader",
+				"ContributionPoint"
 			]
 		},
 		"mainnet": {
 			"admin-mainnet": [
 				"CaaArts",
 				"CaaPass",
-				"SwapTrader"
+				"SwapTrader",
+				"ContributionPoint"
 			]
 		}
 	}
