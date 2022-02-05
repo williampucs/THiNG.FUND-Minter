@@ -26,24 +26,14 @@
 		"SwapTrader": "./contracts/SwapTrader.cdc"
 	},
 	"networks": {
-		"emulator": {
-			"host": "127.0.0.1:3569",
-			"chain": "flow-emulator"
-		},
-		"testnet": {
-			"host": "access.devnet.nodes.onflow.org:9000",
-			"chain": "flow-testnet"
-		},
-		"mainnet": {
-			"host": "access.mainnet.nodes.onflow.org:9000",
-			"chain": "flow-mainnet"
-		}
+		"emulator": "127.0.0.1:3569",
+		"testnet": "access.devnet.nodes.onflow.org:9000",
+		"mainnet": "access.mainnet.nodes.onflow.org:9000"
 	},
 	"accounts": {
 		"emulator-account": {
 			"address": "f8d6e0586b0a20c7",
-			"keys": "41580f910db3779bcbd82739b3eb5a642ceb50a37b188bbfc6befae4e8cb5556",
-			"chain": "flow-emulator"
+			"key": "41580f910db3779bcbd82739b3eb5a642ceb50a37b188bbfc6befae4e8cb5556"
 		},
 		"admin-testnet": {
 			"address": "a8b1239250f8d342",
@@ -57,8 +47,7 @@
 						"privateKey": "74911f91945d6b6648f02cbafcd353e857f1d2967ba9c252e2dc761d24f0f403"
 					}
 				}
-			],
-			"chain": "flow-testnet"
+			]
 		},
 		"user-testnet": {
 			"address": "bee546a1c9fcd923",
@@ -72,8 +61,7 @@
 						"privateKey": "b7c15c43f9c3f394809cc2c5c5be7aef5bd17dbbdb60be41ca89c57e6bb45fab"
 					}
 				}
-			],
-			"chain": "flow-testnet"
+			]
 		},
 		"admin-mainnet": {
 			"address": "98c9c2e548b84d31",
@@ -88,8 +76,7 @@
 					},
 					"resourceID": "projects/portto-prod/locations/global/keyRings/flow-keys/cryptoKeys/portto-operation/cryptoKeyVersions/1"
 				}
-			],
-			"chain": "flow-mainnet"
+			]
 		},
 		"admin-mainnet-local": {
 			"fromFile": "./flow.mainnet.json"
