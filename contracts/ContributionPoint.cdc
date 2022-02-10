@@ -77,7 +77,7 @@ pub contract ContributionPoint: FungibleToken, Pausable {
     /// out of thin air. A special Minter resource needs to be defined to mint
     /// new tokens.
     ///
-    pub resource Vault: FungibleToken.Provider, FungibleToken.Receiver, FungibleToken.Balance {
+    pub resource Vault: FungibleToken.Provider, FungibleToken.Receiver, FungibleToken.Balance, Pausable.Checker {
 
         /// The total balance of this vault
         pub var balance: UFix64
@@ -98,6 +98,9 @@ pub contract ContributionPoint: FungibleToken, Pausable {
         /// elsewhere.
         ///
         pub fun withdraw(amount: UFix64): @FungibleToken.Vault {
+            // only callable when not paused
+            self.whenNotPaused()
+
             self.balance = self.balance - amount
             emit TokensWithdrawn(amount: amount, from: self.owner?.address)
             return <-create Vault(balance: amount)
@@ -119,6 +122,20 @@ pub contract ContributionPoint: FungibleToken, Pausable {
             vault.balance = 0.0
             destroy vault
         }
+
+        /// Returns true if the contract is paused, and false otherwise.
+        ///
+        pub fun paused(): Bool {
+            return ContributionPoint.paused
+        }
+
+        /// a function callable only when the contract is not paused.
+        /// 
+        access(contract) fun whenNotPaused() {}
+
+        /// a function callable only when the contract is paused.
+        /// 
+        access(contract) fun whenPaused() {}
 
         destroy() {
             ContributionPoint.totalSupply = ContributionPoint.totalSupply - self.balance
@@ -154,6 +171,15 @@ pub contract ContributionPoint: FungibleToken, Pausable {
         pub fun createNewBurner(): @Burner {
             emit BurnerCreated()
             return <-create Burner()
+        }
+
+        /// createNewPauser
+        ///
+        /// Function that creates and returns a new pauser resource
+        ///
+        pub fun createNewPauser(): @Pauser {
+            emit PauserCreated()
+            return <-create Pauser()
         }
     }
 
@@ -208,6 +234,33 @@ pub contract ContributionPoint: FungibleToken, Pausable {
         }
     }
 
+    /// Pauser
+    ///
+    /// Resource object that token admin accounts can hold to pause tokens withdrawal.
+    ///
+    pub resource Pauser: Pausable.Pauser {
+
+        /// pause
+        /// 
+        pub fun pause() {
+            pre {
+                !ContributionPoint.paused: "Pausable: paused"
+            }
+            ContributionPoint.paused = true
+            emit Paused()
+        }
+
+        /// unpause
+        ///
+        pub fun unpause() {
+            pre {
+                ContributionPoint.paused: "Pausable: not paused"
+            }
+            ContributionPoint.paused = false
+            emit Unpaused()
+        }
+    }
+
     init() {
         // Set named paths
         self.AdminStoragePath = /storage/ThingFundContributePointAdmin
@@ -218,8 +271,8 @@ pub contract ContributionPoint: FungibleToken, Pausable {
         // Set total supply
         self.totalSupply = 0.0
 
-        // Set paused
-        self.paused = false
+        // Set paused default
+        self.paused = true
 
         // Create the Vault with the total supply of tokens and save it in storage
         //

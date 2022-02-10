@@ -27,23 +27,23 @@ pub contract interface Pausable {
         ///
         pub fun paused(): Bool;
 
-        /// make a function callable only when the contract is not paused.
+        /// a function callable only when the contract is not paused.
         /// 
         /// Requirements:
         /// - The contract must not be paused.
         ///
-        pub fun whenNotPaused() {
+        access(contract) fun whenNotPaused() {
             pre {
                 !self.paused(): "Pausable: paused"
             }
         }
 
-        /// make a function callable only when the contract is paused.
+        /// a function callable only when the contract is paused.
         /// 
         /// Requirements:
         /// - The contract must be paused.
         ///
-        pub fun whenPaused() {
+        access(contract) fun whenPaused() {
             pre {
                 self.paused(): "Pausable: not paused"
             }
