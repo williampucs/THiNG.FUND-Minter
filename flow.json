@@ -24,7 +24,8 @@
 		"CaaArts": "./contracts/CaaArts.cdc",
 		"CaaPass": "./contracts/CaaPass.cdc",
 		"SwapTrader": "./contracts/SwapTrader.cdc",
-		"ContributionPoint": "./contracts/ContributionPoint.cdc"
+		"ContributionPoint": "./contracts/ContributionPoint.cdc",
+		"Pausable": "./contracts/Pausable.cdc"
 	},
 	"networks": {
 		"emulator": "127.0.0.1:3569",
@@ -90,6 +91,7 @@
 				"CaaArts",
 				"CaaPass",
 				"SwapTrader",
+				"Pausable",
 				"ContributionPoint"
 			]
 		},
@@ -98,6 +100,7 @@
 				"CaaArts",
 				"CaaPass",
 				"SwapTrader",
+				"Pausable",
 				"ContributionPoint"
 			]
 		},
@@ -106,6 +109,7 @@
 				"CaaArts",
 				"CaaPass",
 				"SwapTrader",
+				"Pausable",
 				"ContributionPoint"
 			]
 		}
