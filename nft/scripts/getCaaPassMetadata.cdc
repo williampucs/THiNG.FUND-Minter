@@ -1,5 +1,5 @@
-import NonFungibleToken from "../contracts/NonFungibleToken.cdc"
-import CaaPass from "../contracts/CaaPass.cdc"
+import NonFungibleToken from "../../contracts/NonFungibleToken.cdc"
+import CaaPass from "../../contracts/CaaPass.cdc"
 
 pub fun main(address: Address): CaaPass.Metadata? {
     let collectionRef = getAccount(address).getCapability(CaaPass.CollectionPublicPath)

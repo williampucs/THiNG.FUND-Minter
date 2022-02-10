@@ -1,5 +1,5 @@
-import NonFungibleToken from "../contracts/NonFungibleToken.cdc"
-import CaaPass from "../contracts/CaaPass.cdc"
+import NonFungibleToken from "../../contracts/NonFungibleToken.cdc"
+import CaaPass from "../../contracts/CaaPass.cdc"
 
 transaction(index: UInt64, title: String, description: String, mediaType: String, mediaHash: String) {
 

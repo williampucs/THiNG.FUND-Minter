@@ -1,5 +1,5 @@
-import NonFungibleToken from "../contracts/NonFungibleToken.cdc"
-import SwapTrader from "../contracts/SwapTrader.cdc"
+import NonFungibleToken from "../../contracts/NonFungibleToken.cdc"
+import SwapTrader from "../../contracts/SwapTrader.cdc"
 
 pub fun main(address: Address, pairID: UInt64): AnyStruct{SwapTrader.SwapPairAttributes}? {
     let ref = getAccount(address).getCapability(SwapTrader.SwapPairListPublicPath)

@@ -1,6 +1,6 @@
 
-import NonFungibleToken from "../contracts/NonFungibleToken.cdc"
-import CaaPass from "../contracts/CaaPass.cdc"
+import NonFungibleToken from "../../contracts/NonFungibleToken.cdc"
+import CaaPass from "../../contracts/CaaPass.cdc"
 
 // This transaction transfers a CAA Pass from one account to another.
 

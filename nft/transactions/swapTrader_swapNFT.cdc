@@ -1,6 +1,6 @@
-import NonFungibleToken from "../contracts/NonFungibleToken.cdc"
-import SwapTrader from "../contracts/SwapTrader.cdc"
-import CaaPass from "../contracts/CaaPass.cdc"
+import NonFungibleToken from "../../contracts/NonFungibleToken.cdc"
+import SwapTrader from "../../contracts/SwapTrader.cdc"
+import CaaPass from "../../contracts/CaaPass.cdc"
 
 transaction(address: Address, pairID: UInt64, sourceIDs: [UInt64]) {
   let swapTraderList: &{SwapTrader.SwapPairListPublic}

@@ -1,5 +1,5 @@
-import NonFungibleToken from "../contracts/NonFungibleToken.cdc"
-import CaaArts from "../contracts/CaaArts.cdc"
+import NonFungibleToken from "../../contracts/NonFungibleToken.cdc"
+import CaaArts from "../../contracts/CaaArts.cdc"
 
 pub fun main(address: Address): CaaArts.Metadata? {
     let collectionRef = getAccount(address).getCapability(CaaArts.CollectionPublicPath)

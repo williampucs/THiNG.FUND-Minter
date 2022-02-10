@@ -1,5 +1,5 @@
-// import NonFungibleToken from "../contracts/NonFungibleToken.cdc"
-import SwapTrader from "../contracts/SwapTrader.cdc"
+// import NonFungibleToken from "../../contracts/NonFungibleToken.cdc"
+import SwapTrader from "../../contracts/SwapTrader.cdc"
 
 transaction(pairID: UInt64, paused: Bool) {
   let swapTraderList: &SwapTrader.SwapPairList
