@@ -1,4 +1,5 @@
 import NonFungibleToken from "./NonFungibleToken.cdc"
+import MetadataViews from "./MetadataViews.cdc"
 
 pub contract CaaPass: NonFungibleToken {
 
@@ -51,7 +52,7 @@ pub contract CaaPass: NonFungibleToken {
     // NFT
     // An CAA art piece NFT
     //
-    pub resource NFT: NonFungibleToken.INFT {
+    pub resource NFT: NonFungibleToken.INFT, MetadataViews.Resolver {
         // The token's ID
         pub let id: UInt64
 
@@ -68,6 +69,49 @@ pub contract CaaPass: NonFungibleToken {
         init(initID: UInt64, typeID: UInt64) {
             self.id = initID
             self.typeID = typeID
+        }
+
+        pub fun getViews(): [Type] {
+            return [
+                Type<Metadata>(),
+                Type<MetadataViews.Serial>(),
+                Type<MetadataViews.Display>(),
+                Type<MetadataViews.NFTCollectionData>()
+            ]
+        }
+
+        pub fun resolveView(_ view: Type): AnyStruct? {
+            let metadata = self.getMetadata()
+            if metadata == nil {
+                return nil
+            }
+            switch view {
+                case Type<Metadata>():
+                    return metadata
+                case Type<MetadataViews.Serial>():
+                    return MetadataViews.Serial(
+                        self.id
+                    )
+                case Type<MetadataViews.Display>():
+                    return MetadataViews.Display(
+                        name: metadata!.name,
+                        description: metadata!.description,
+                        thumbnail: MetadataViews.IPFSFile(cid: metadata!.mediaHash, path: nil)
+                    )
+                case Type<MetadataViews.NFTCollectionData>():
+                    return MetadataViews.NFTCollectionData(
+                        storagePath: CaaPass.CollectionStoragePath,
+                        publicPath: CaaPass.CollectionPublicPath,
+                        providerPath: /private/caaPassCollection, // not exists for now
+                        publicCollection: Type<&CaaPass.Collection{CaaPass.CollectionPublic}>(),
+                        publicLinkedType: Type<&CaaPass.Collection{CaaPass.CollectionPublic,NonFungibleToken.CollectionPublic,NonFungibleToken.Receiver,MetadataViews.ResolverCollection}>(),
+                        providerLinkedType: Type<&CaaPass.Collection{CaaPass.CollectionPublic,NonFungibleToken.CollectionPublic,NonFungibleToken.Provider,MetadataViews.ResolverCollection}>(),
+                        createEmptyCollectionFunction: (fun (): @NonFungibleToken.Collection {
+                            return <-CaaPass.createEmptyCollection()
+                        })
+                    )
+            }
+            return nil
         }
     }
 
@@ -88,7 +132,7 @@ pub contract CaaPass: NonFungibleToken {
     // Collection
     // A collection of CaaPass NFTs owned by an account
     //
-    pub resource Collection: NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic, CollectionPublic {
+    pub resource Collection: NonFungibleToken.Provider, NonFungibleToken.Receiver, NonFungibleToken.CollectionPublic, CollectionPublic, MetadataViews.ResolverCollection {
         // dictionary of NFT conforming tokens
         // NFT is a resource type with an `UInt64` ID field
         //
@@ -129,12 +173,20 @@ pub contract CaaPass: NonFungibleToken {
             return self.ownedNFTs.keys
         }
 
+        // borrowViewResolver
+        // 
+        pub fun borrowViewResolver(id: UInt64): &AnyResource{MetadataViews.Resolver} {
+            let nft = (&self.ownedNFTs[id] as auth &NonFungibleToken.NFT?)!
+            let theNFT = nft as! &CaaPass.NFT
+            return theNFT as &AnyResource{MetadataViews.Resolver}
+        }
+
         // borrowNFT
         // Gets a reference to an NFT in the collection
         // so that the caller can read its metadata and call its methods
         //
         pub fun borrowNFT(id: UInt64): &NonFungibleToken.NFT {
-            return &self.ownedNFTs[id] as &NonFungibleToken.NFT
+            return (&self.ownedNFTs[id] as &NonFungibleToken.NFT?)!
         }
 
         // borrowCaaPass
@@ -144,7 +196,8 @@ pub contract CaaPass: NonFungibleToken {
         //
         pub fun borrowCaaPass(id: UInt64): &CaaPass.NFT? {
             if self.ownedNFTs[id] != nil {
-                let ref = &self.ownedNFTs[id] as auth &NonFungibleToken.NFT
+                // Create an authorized reference to allow downcasting
+                let ref = (&self.ownedNFTs[id] as auth &NonFungibleToken.NFT?)!
                 return ref as! &CaaPass.NFT
             } else {
                 return nil
