@@ -2,8 +2,14 @@ import FungibleToken from "./FungibleToken.cdc"
 import Pausable from "./Pausable.cdc"
 
 pub contract ContributionPoint: FungibleToken, Pausable {
-    /// Total supply of ContributionPoint in existence
+    /// Total supply of ExampleTokens in existence
     pub var totalSupply: UFix64
+
+    /// Storage and Public Paths
+    pub let VaultStoragePath: StoragePath
+    pub let ReceiverPublicPath: PublicPath
+    pub let BalancePublicPath: PublicPath
+    pub let AdminStoragePath: StoragePath
 
     /// If current contract is paused
     access(contract) var paused: Bool
@@ -57,13 +63,6 @@ pub contract ContributionPoint: FungibleToken, Pausable {
     ///
     /// Emitted when the pause is lifted.
     pub event Unpaused()
-
-    // Named Paths
-    //
-    pub let AdminStoragePath: StoragePath
-    pub let VaultStoragePath: StoragePath
-    pub let TokenReceiverPublicPath: PublicPath
-    pub let TokenBalancePublicPath: PublicPath
 
     /// Vault
     ///
@@ -265,8 +264,8 @@ pub contract ContributionPoint: FungibleToken, Pausable {
         // Set named paths
         self.AdminStoragePath = /storage/ThingFundContributePointAdmin
         self.VaultStoragePath = /storage/ThingFundContributePointVault
-        self.TokenReceiverPublicPath = /public/ThingFundContributePointReceiver
-        self.TokenBalancePublicPath = /public/ThingFundContributePointBalance
+        self.ReceiverPublicPath = /public/ThingFundContributePointReceiver
+        self.BalancePublicPath = /public/ThingFundContributePointBalance
         
         // Set total supply
         self.totalSupply = 0.0
@@ -283,7 +282,7 @@ pub contract ContributionPoint: FungibleToken, Pausable {
         // the `deposit` method through the `Receiver` interface
         //
         self.account.link<&{FungibleToken.Receiver}>(
-            self.TokenReceiverPublicPath,
+            self.ReceiverPublicPath,
             target: self.VaultStoragePath
         )
 
@@ -291,7 +290,7 @@ pub contract ContributionPoint: FungibleToken, Pausable {
         // the `balance` field through the `Balance` interface
         //
         self.account.link<&ContributionPoint.Vault{FungibleToken.Balance}>(
-            self.TokenBalancePublicPath,
+            self.BalancePublicPath,
             target: self.VaultStoragePath
         )
 
