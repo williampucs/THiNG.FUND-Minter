@@ -1,7 +1,5 @@
 import FungibleToken from "./FungibleToken.cdc"
 import Pausable from "./Pausable.cdc"
-// import FungibleToken from 0xf233dcee88fe0abe
-// import Pausable from 0x98c9c2e548b84d31
 
 pub contract ContributionPoint: FungibleToken, Pausable {
     /// Total supply of ExampleTokens in existence
