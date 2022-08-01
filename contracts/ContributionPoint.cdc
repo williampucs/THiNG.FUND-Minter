@@ -1,5 +1,7 @@
 import FungibleToken from "./FungibleToken.cdc"
 import Pausable from "./Pausable.cdc"
+// import FungibleToken from 0xf233dcee88fe0abe
+// import Pausable from 0x98c9c2e548b84d31
 
 pub contract ContributionPoint: FungibleToken, Pausable {
     /// Total supply of ExampleTokens in existence
@@ -271,7 +273,7 @@ pub contract ContributionPoint: FungibleToken, Pausable {
         self.totalSupply = 0.0
 
         // Set paused default
-        self.paused = true
+        self.paused = false
 
         // Create the Vault with the total supply of tokens and save it in storage
         //
