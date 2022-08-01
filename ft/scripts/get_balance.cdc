@@ -5,7 +5,7 @@ import ContributionPoint from "../../contracts/ContributionPoint.cdc"
 
 pub fun main(account: Address): UFix64 {
     let acct = getAccount(account)
-    let vaultRef = acct.getCapability(ContributionPoint.TokenBalancePublicPath)
+    let vaultRef = acct.getCapability(ContributionPoint.BalancePublicPath)
         .borrow<&ContributionPoint.Vault{FungibleToken.Balance}>()
         ?? panic("Could not borrow Balance reference to the Vault")
 

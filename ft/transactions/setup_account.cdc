@@ -24,14 +24,14 @@ transaction {
         // Create a public capability to the Vault that only exposes
         // the deposit function through the Receiver interface
         signer.link<&ContributionPoint.Vault{FungibleToken.Receiver}>(
-            ContributionPoint.TokenReceiverPublicPath,
+            ContributionPoint.ReceiverPublicPath,
             target: ContributionPoint.VaultStoragePath
         )
 
         // Create a public capability to the Vault that only exposes
         // the balance field through the Balance interface
         signer.link<&ContributionPoint.Vault{FungibleToken.Balance}>(
-            ContributionPoint.TokenBalancePublicPath,
+            ContributionPoint.BalancePublicPath,
             target: ContributionPoint.VaultStoragePath
         )
     }

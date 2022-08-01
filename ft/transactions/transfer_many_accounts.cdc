@@ -24,7 +24,7 @@ transaction(addressAmountMap: {Address: UFix64}) {
             let recipient = getAccount(address)
 
             // Get a reference to the recipient's Receiver
-            let receiverRef = recipient.getCapability(ContributionPoint.TokenReceiverPublicPath)
+            let receiverRef = recipient.getCapability(ContributionPoint.ReceiverPublicPath)
                 .borrow<&{FungibleToken.Receiver}>()
                 ?? panic("Could not borrow receiver reference to the recipient's Vault")
 

@@ -10,7 +10,7 @@ transaction(recipient: Address, amount: UFix64) {
             ?? panic("Signer is not the token admin")
 
         self.tokenReceiver = getAccount(recipient)
-            .getCapability(ContributionPoint.TokenReceiverPublicPath)
+            .getCapability(ContributionPoint.ReceiverPublicPath)
             .borrow<&{FungibleToken.Receiver}>()
             ?? panic("Unable to borrow receiver reference")
     }
