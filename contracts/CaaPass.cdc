@@ -76,6 +76,7 @@ pub contract CaaPass: NonFungibleToken {
                 Type<Metadata>(),
                 Type<MetadataViews.Serial>(),
                 Type<MetadataViews.Display>(),
+                Type<MetadataViews.Royalties>(),
                 Type<MetadataViews.NFTCollectionData>(),
                 Type<MetadataViews.NFTCollectionDisplay>(),
                 Type<MetadataViews.ExternalURL>()
@@ -94,6 +95,8 @@ pub contract CaaPass: NonFungibleToken {
                     return MetadataViews.Serial(
                         self.id
                     )
+                case Type<MetadataViews.Royalties>():
+                    return MetadataViews.Royalties([])
                 case Type<MetadataViews.Display>():
                     return MetadataViews.Display(
                         name: metadata!.name,
