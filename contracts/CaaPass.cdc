@@ -119,11 +119,15 @@ pub contract CaaPass: NonFungibleToken {
                     )
                 case Type<MetadataViews.NFTCollectionDisplay>():
                     let square = MetadataViews.Media(
-                        file: MetadataViews.IPFSFile(cid: "bafkreigyok222sqtrxjsfq4ovyisjjb4tw2s6njahsi4yogomv6rqyhuw4", path: nil),
+                        file: MetadataViews.HTTPFile(
+                            url: "https://raw.githubusercontent.com/williampucs/THiNG.FUND-Minter/main/assets/squareImage.png"
+                        ),
                         mediaType: "image/png"
                     )
                     let banner = MetadataViews.Media(
-                        file: MetadataViews.IPFSFile(cid: "bafkreihlfsybexnd7mhriwsj7lopdaf33vouvxbd2yojoihh5ynuaauxtu", path: nil),
+                        file: MetadataViews.HTTPFile(
+                            url: "https://raw.githubusercontent.com/williampucs/THiNG.FUND-Minter/main/assets/bannerImage.png"
+                        ),
                         mediaType: "image/png"
                     )
                     return MetadataViews.NFTCollectionDisplay(
