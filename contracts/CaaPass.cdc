@@ -76,7 +76,9 @@ pub contract CaaPass: NonFungibleToken {
                 Type<Metadata>(),
                 Type<MetadataViews.Serial>(),
                 Type<MetadataViews.Display>(),
-                Type<MetadataViews.NFTCollectionData>()
+                Type<MetadataViews.NFTCollectionData>(),
+                Type<MetadataViews.NFTCollectionDisplay>(),
+                Type<MetadataViews.ExternalURL>()
             ]
         }
 
@@ -98,6 +100,8 @@ pub contract CaaPass: NonFungibleToken {
                         description: metadata!.description,
                         thumbnail: MetadataViews.IPFSFile(cid: metadata!.mediaHash, path: nil)
                     )
+                case Type<MetadataViews.ExternalURL>():
+                    return MetadataViews.ExternalURL("https://thing.fund/")
                 case Type<MetadataViews.NFTCollectionData>():
                     return MetadataViews.NFTCollectionData(
                         storagePath: CaaPass.CollectionStoragePath,
